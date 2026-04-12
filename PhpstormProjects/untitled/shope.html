@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Armastus - أحدث المنتجات | Newest</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black: #111111;
+            --white: #ffffff;
+            --red: #ca192c;
+            --cream: #fdfaf6;
+            --gray-light: #f7f7f7;
+            --gray-mid: #e5e5e5;
+            --gray-text: #888;
+            --border: #eeeeee;
+            --gold: #c8a96e;
+            --sidebar-w: 240px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Tajawal', sans-serif; background: var(--white); color: var(--black); overflow-x: hidden; }
+        a { text-decoration: none; color: inherit; }
+        img { display: block; }
+
+        /* ── OFFER BAR ── */
+        .offer-bar {
+            background: var(--black);
+            color: var(--white);
+            text-align: center;
+            padding: 9px 16px;
+            font-size: 11.5px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        /* ── HEADER ── */
+        .header {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            padding: 0 16px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-left, .header-right { display: flex; align-items: center; gap: 10px; flex: 1; }
+        .header-right { justify-content: flex-end; }
+        .header-logo { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; letter-spacing: 3px; white-space: nowrap; }
+        .hicon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 50%; transition: background 0.18s; position: relative; }
+        .hicon:hover { background: var(--gray-light); }
+        .hicon svg { width: 17px; height: 17px; fill: currentColor; }
+        .cart-badge { position: absolute; top: 3px; right: 3px; width: 15px; height: 15px; background: var(--red); color: #fff; font-size: 8px; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+
+        /* ── BREADCRUMB ── */
+        .breadcrumb {
+            padding: 10px 16px;
+            font-size: 11px;
+            color: var(--gray-text);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--gray-light);
+            border-bottom: 1px solid var(--border);
+        }
+        .breadcrumb a { color: var(--gray-text); }
+        .breadcrumb a:hover { color: var(--black); }
+        .breadcrumb span { color: var(--black); font-weight: 600; }
+
+        /* ── PAGE TITLE ── */
+        .collection-header {
+            text-align: center;
+            padding: 18px 16px 10px;
+        }
+        .collection-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 400;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        .collection-hint {
+            margin: 8px auto 0;
+            max-width: 380px;
+            font-size: 10px;
+            color: var(--gray-text);
+            background: rgba(255,255,224,0.4);
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: 8px;
+            padding: 7px 14px;
+            line-height: 1.6;
+        }
+        .collection-hint strong { color: var(--red); }
+
+        /* ── TOOLBAR ── */
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border);
+            gap: 10px;
+        }
+        .filter-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            padding: 7px 14px;
+            border-radius: 4px;
+            background: var(--white);
+            transition: background 0.18s;
+        }
+        .filter-btn:hover { background: var(--gray-light); }
+        .filter-btn svg { width: 14px; height: 14px; fill: currentColor; }
+        .filter-btn.active { background: var(--black); color: var(--white); border-color: var(--black); }
+
+        .sort-wrap { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+        .sort-wrap label { color: var(--gray-text); font-size: 11px; white-space: nowrap; }
+        .sort-select {
+            border: 1px solid var(--border);
+            padding: 6px 10px;
+            font-size: 12px;
+            font-family: 'Tajawal', sans-serif;
+            background: var(--white);
+            border-radius: 4px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .product-count { font-size: 11px; color: var(--gray-text); white-space: nowrap; }
+
+        /* ── ACTIVE FILTERS ── */
+        .active-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 8px 16px;
+            min-height: 0;
+        }
+        .active-filters:empty { padding: 0; }
+        .filter-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            background: var(--gray-light);
+            border: 1px solid var(--border);
+            padding: 4px 10px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .filter-tag:hover { background: var(--gray-mid); }
+        .filter-tag .x { font-size: 13px; color: var(--gray-text); line-height: 1; }
+        .clear-all {
+            font-size: 11px;
+            color: var(--gray-text);
+            text-decoration: underline;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        /* ── LAYOUT ── */
+        .page-layout {
+            display: flex;
+            align-items: flex-start;
+            gap: 0;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: var(--sidebar-w);
+            flex-shrink: 0;
+            border-left: 1px solid var(--border);
+            background: var(--white);
+            padding: 16px 14px;
+            position: sticky;
+            top: 56px;
+            max-height: calc(100vh - 56px);
+            overflow-y: auto;
+            transition: transform 0.3s, width 0.3s;
+            display: none;
+        }
+        .sidebar.open { display: block; }
+        @media(min-width: 768px) {
+            .sidebar { display: block; }
+            .filter-btn { display: none; }
+        }
+
+        .sidebar-section { margin-bottom: 20px; }
+        .sidebar-section-title {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--black);
+            margin-bottom: 10px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Color filter */
+        .color-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px 8px; }
+        .filter-check {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: #374151;
+            cursor: pointer;
+            padding: 2px 0;
+        }
+        .filter-check input { cursor: pointer; width: 13px; height: 13px; accent-color: var(--black); }
+        .filter-check:hover { color: var(--black); }
+
+        /* Size filter */
+        .size-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+        .size-btn {
+            border: 1px solid var(--border);
+            padding: 5px 4px;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: background 0.15s, border-color 0.15s;
+            background: var(--white);
+        }
+        .size-btn:hover { border-color: var(--black); }
+        .size-btn.active { background: var(--black); color: var(--white); border-color: var(--black); }
+
+        /* Price filter */
+        .price-inputs { display: flex; align-items: center; gap: 6px; }
+        .price-input {
+            flex: 1;
+            border: 1px solid var(--border);
+            padding: 6px 8px;
+            font-size: 12px;
+            font-family: 'Tajawal', sans-serif;
+            border-radius: 3px;
+            outline: none;
+            text-align: center;
+            direction: ltr;
+        }
+        .price-input:focus { border-color: var(--black); }
+        .price-sep { font-size: 11px; color: var(--gray-text); }
+        .apply-price {
+            width: 100%;
+            margin-top: 8px;
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            padding: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            border-radius: 3px;
+        }
+
+        .clear-filters-btn {
+            background: none;
+            border: none;
+            font-size: 11px;
+            color: var(--gray-text);
+            cursor: pointer;
+            text-decoration: underline;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+            margin-top: 4px;
+        }
+
+        /* ── PRODUCTS MAIN ── */
+        .products-main {
+            flex: 1;
+            min-width: 0;
+            padding: 12px 12px 80px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        /* ── PRODUCT CARD ── */
+        .product-card { position: relative; cursor: pointer; }
+        .product-card:hover .product-img img.primary { opacity: 0; }
+        .product-card:hover .product-img img.hover { opacity: 1; }
+
+        .product-img {
+            position: relative;
+            aspect-ratio: 3/4;
+            overflow: hidden;
+            border-radius: 5px;
+            background: var(--gray-light);
+            margin-bottom: 8px;
+        }
+        .product-img img {
+            position: absolute; inset: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: opacity 0.35s, transform 0.4s;
+        }
+        .product-img img.primary { opacity: 1; }
+        .product-img img.hover { opacity: 0; }
+        .product-card:hover .product-img img.primary { transform: scale(1.04); }
+
+        .product-badge {
+            position: absolute;
+            top: 7px; right: 7px;
+            background: var(--red);
+            color: #fff;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 6px;
+            letter-spacing: 0.5px;
+            z-index: 2;
+        }
+
+        .wishlist-btn {
+            position: absolute;
+            top: 7px; left: 7px;
+            width: 28px; height: 28px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            z-index: 2;
+            border: none;
+            transition: background 0.2s;
+        }
+        .wishlist-btn:hover { background: #fff; }
+        .wishlist-btn svg { width: 13px; height: 13px; fill: #ccc; transition: fill 0.2s; }
+        .wishlist-btn.liked svg { fill: var(--red); }
+
+        /* Swatches row */
+        .swatches-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+            justify-content: center;
+            padding: 4px 4px 0;
+        }
+        .swatch-circle {
+            width: 22px; height: 22px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: border-color 0.15s, transform 0.15s;
+            flex-shrink: 0;
+        }
+        .swatch-circle:hover, .swatch-circle.active { border-color: var(--black); transform: scale(1.1); }
+        .swatch-circle img { width: 100%; height: 100%; object-fit: cover; }
+
+        .product-info { padding: 0 2px; }
+        .product-name {
+            font-size: 12.5px;
+            font-weight: 500;
+            color: var(--black);
+            margin-bottom: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .product-pricing { display: flex; align-items: center; gap: 5px; }
+        .price-sale { font-size: 12.5px; font-weight: 700; color: var(--red); }
+        .price-old { font-size: 11px; color: var(--gray-text); text-decoration: line-through; }
+
+        /* ── LOAD MORE ── */
+        .load-more-wrap { text-align: center; margin-top: 24px; }
+        .load-more-btn {
+            display: inline-block;
+            border: 1px solid var(--black);
+            padding: 10px 32px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-family: 'Tajawal', sans-serif;
+            cursor: pointer;
+            background: var(--white);
+            border-radius: 6px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .load-more-btn:hover { background: var(--black); color: var(--white); }
+
+        /* ── BOTTOM NAV ── */
+        .mobile-nav {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: var(--black);
+            display: flex; height: 54px; z-index: 200;
+        }
+        .mnav-item {
+            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 2px; color: rgba(255,255,255,0.5); cursor: pointer;
+            font-size: 8.5px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; text-decoration: none;
+            transition: color 0.15s;
+        }
+        .mnav-item:hover, .mnav-item.active { color: var(--white); }
+        .mnav-item svg { width: 17px; height: 17px; fill: currentColor; }
+
+        /* ── MOBILE FILTER OVERLAY ── */
+        .filter-overlay {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 150;
+        }
+        .filter-overlay.open { display: block; }
+
+        .mobile-sidebar {
+            position: fixed;
+            top: 0; left: 0;
+            width: min(280px, 85vw);
+            height: 100%;
+            background: var(--white);
+            z-index: 151;
+            transform: translateX(-100%);
+            transition: transform 0.3s;
+            overflow-y: auto;
+            padding: 16px;
+        }
+        .mobile-sidebar.open { transform: translateX(0); }
+        .mobile-sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .mobile-sidebar-title { font-size: 14px; font-weight: 700; letter-spacing: 1px; }
+        .close-sidebar { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .close-sidebar svg { width: 14px; height: 14px; fill: currentColor; }
+
+        /* ── NO RESULTS ── */
+        .no-results { text-align: center; padding: 40px 20px; color: var(--gray-text); font-size: 14px; }
+
+        /* Scrollbar */
+        .sidebar::-webkit-scrollbar, .mobile-sidebar::-webkit-scrollbar { width: 3px; }
+        .sidebar::-webkit-scrollbar-thumb, .mobile-sidebar::-webkit-scrollbar-thumb { background: var(--gray-mid); border-radius: 2px; }
+
+        @media(min-width: 768px) {
+            .products-grid { grid-template-columns: repeat(3, 1fr); }
+            .filter-overlay, .mobile-sidebar { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- OFFER BAR -->
+<div class="offer-bar">🚚 اطلبي بـ 500₪ واحصلي على توصيل مجاني للضفة &nbsp;|&nbsp; القدس 10₪ &nbsp;|&nbsp; الداخل 30₪</div>
+
+<!-- HEADER -->
+<header class="header">
+    <div class="header-left">
+        <div class="hicon" onclick="toggleMobileSidebar()">
+            <svg viewBox="0 0 464 464"><path d="M435 406H29c-16 0-29-13-29-29s13-29 29-29h406c16 0 29 13 29 29s-13 29-29 29zm0-145H29c-16 0-29-13-29-29s13-29 29-29h406c16 0 29 13 29 29s-13 29-29 29zm0-145H29C13 116 0 103 0 87s13-29 29-29h406c16 0 29 13 29 29s-13 29-29 29z"/></svg>
+        </div>
+        <div class="hicon">
+            <svg viewBox="0 0 32 32"><path d="M31.8 30.1l-8-8c-.1-.1-.3-.2-.5-.2h-.6c2.1-2.3 3.5-5.4 3.5-8.8 0-7.2-5.8-13-13-13S0 5.8 0 13s5.8 13 13 13c3.4 0 6.5-1.3 8.8-3.5v.6c0 .2.1.4.2.5l8.1 8.1c.3.3.8.3 1.1 0l.6-.6c.3-.3.3-.8 0-1.1zM13 24c-6.1 0-11-4.9-11-11s4.9-11 11-11 11 4.9 11 11-4.9 11-11 11z"/></svg>
+        </div>
+    </div>
+    <a href="/" class="header-logo">ARMASTUS</a>
+    <div class="header-right">
+        <div class="hicon">
+            <svg viewBox="0 0 32 32"><path d="M15.7 18.2c-4.9 0-8.9-4-8.9-8.9S10.8.5 15.7.5s8.9 4 8.9 8.9-4.1 8.8-8.9 8.8zm0-16.5c-4.3 0-7.6 3.5-7.6 7.6s3.3 7.6 7.6 7.6c4.1 0 7.6-3.3 7.6-7.6 0-4.3-3.5-7.6-7.6-7.6zM30.6 31.5h-1.3c0-7.3-6-13.3-13.3-13.3S2.7 24.2 2.7 31.5H1.4c0-8.1 6.5-14.6 14.6-14.6s14.6 6.5 14.6 14.6z"/></svg>
+        </div>
+        <div class="hicon" style="position:relative">
+            <svg viewBox="0 0 576 512"><path d="M552 64H129.3l-8.3-44.4C118.8 8.2 108.9 0 97.4 0H12C5.4 0 0 5.4 0 12v8c0 6.6 5.4 12 12 12h78.7L161 405c-10.6 11.3-17 26.4-17 43 0 35.3 28.7 64 64 64s64-28.7 64-64a63.7 63.7 0 0 0-8.6-32h145.2a63.7 63.7 0 0 0-8.6 32c0 35.3 28.7 64 64 64 35.3 0 64-28.7 64-64 0-18-7.4-34.2-19.4-45.9H544c11.4 0 21.2-8 23.5-19.1l43.3-208C614 78 602.7 64 552 64z"/></svg>
+            <span class="cart-badge">0</span>
+        </div>
+    </div>
+</header>
+
+<!-- BREADCRUMB -->
+<nav class="breadcrumb">
+    <a href="/">الرئيسية</a>
+    <span style="color:#ccc">|</span>
+    <span>أحدث المنتجات</span>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="collection-header">
+    <h1 class="collection-title">Newest</h1>
+    <div class="collection-hint">
+        استخدمي الفلتر للتسوق حسب
+        <strong>(Category)</strong> القسم
+        <strong>(Color)</strong> اللون
+        <strong>(Size)</strong> المقاس
+    </div>
+</div>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+    <button class="filter-btn" id="filterBtn" onclick="toggleMobileSidebar()">
+        <svg viewBox="0 0 24 24" fill="none"><path d="m3 6.25c-.41421 0-.75.33579-.75.75s.33579.75.75.75zm0 10c-.41421 0-.75.3358-.75.75s.33579.75.75.75zm6 1.5c.41421 0 .75-.3358.75-.75s-.33579-.75-.75-.75zm12 0c.4142 0 .75-.3358.75-.75s-.3358-.75-.75-.75zm-6-11.5c-.4142 0-.75.33579-.75.75s.3358.75.75.75zm6 1.5c.4142 0 .75-.33579.75-.75s-.3358-.75-.75-.75zm-18 0h3v-1.5h-3zm0 10h6v-1.5h-6zm15 0h3v-1.5h-3zm-3-10h6v-1.5h-6zm2.25 9.25c0 1.2426-1.0074 2.25-2.25 2.25v1.5c2.0711 0 3.75-1.6789 3.75-3.75zm-2.25 2.25c-1.2426 0-2.25-1.0074-2.25-2.25h-1.5c0 2.0711 1.6789 3.75 3.75 3.75zm-2.25-2.25c0-1.2426 1.0074-2.25 2.25-2.25v-1.5c-2.0711 0-3.75 1.6789-3.75 3.75zm2.25-2.25c1.2426 0 2.25 1.0074 2.25 2.25h1.5c0-2.0711-1.6789-3.75-3.75-3.75zm-3.75-7.75c0 1.24264-1.0074 2.25-2.25 2.25v1.5c2.0711 0 3.75-1.67893 3.75-3.75zm-2.25 2.25c-1.24264 0-2.25-1.00736-2.25-2.25h-1.5c0 2.07107 1.67893 3.75 3.75 3.75zm-2.25-2.25c0-1.24264 1.00736-2.25 2.25-2.25v-1.5c-2.07107 0-3.75 1.67893-3.75 3.75zm2.25-2.25c1.2426 0 2.25 1.00736 2.25 2.25h1.5c0-2.07107-1.6789-3.75-3.75-3.75z" fill="#28303f"></path></svg>
+        فلتر
+    </button>
+    <span class="product-count" id="productCount">عرض 12 منتج</span>
+    <div class="sort-wrap">
+        <label>ترتيب:</label>
+        <select class="sort-select" id="sortSelect" onchange="applySort()">
+            <option value="newest">الأحدث</option>
+            <option value="price_asc">السعر: الأقل</option>
+            <option value="price_desc">السعر: الأعلى</option>
+            <option value="discount">الأكثر خصماً</option>
+        </select>
+    </div>
+</div>
+
+<!-- ACTIVE FILTERS -->
+<div class="active-filters" id="activeFilters"></div>
+
+<!-- PAGE LAYOUT -->
+<div class="page-layout">
+
+    <!-- DESKTOP SIDEBAR -->
+    <aside class="sidebar" id="desktopSidebar">
+        <!-- Color -->
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">اللون / Color</div>
+            <div class="color-grid" id="colorFilters">
+                <label class="filter-check"><input type="checkbox" value="White" onchange="filterProducts()"><span>أبيض (709)</span></label>
+                <label class="filter-check"><input type="checkbox" value="Black" onchange="filterProducts()"><span>أسود (1024)</span></label>
+                <label class="filter-check"><input type="checkbox" value="Blue" onchange="filterProducts()"><span>أزرق (414)</span></label>
+                <label class="filter-check"><input type="checkbox" value="Red" onchange="filterProducts()"><span>أحمر (130)</span></label>
+                <label class="filter-check"><input type="checkbox" value="Grey" onchange="filterProducts()"><span>رمادي (230)</span></label>
+                <label class="filter-check"><input type="checkbox" value="Yellow" onchange="filterProducts()"><span>أصفر (197)</span></label>
+                <label class="filter-check"><input type="checkbox" value="Pink" onchange="filterProducts()"><span>وردي (340)</span></label>
+                <label class="filter-check"><input type="checkbox" value="Beige" onchange="filterProducts()"><span>بيج (532)</span></label>
+                <label class="filter-check"><input type="checkbox" value="Brown" onchange="filterProducts()"><span>بني (505)</span></label>
+                <label class="filter-check"><input type="checkbox" value="Burgundy" onchange="filterProducts()"><span>نبيذي (451)</span></label>
+                <label class="filter-check"><input type="checkbox" value="Camel" onchange="filterProducts()"><span>كاميل (92)</span></label>
+                <label class="filter-check"><input type="checkbox" value="Denim" onchange="filterProducts()"><span>دنيم (264)</span></label>
+                <label class="filter-check"><input type="checkbox" value="Navy" onchange="filterProducts()"><span>نيفي (311)</span></label>
+                <label class="filter-check"><input type="checkbox" value="Off White" onchange="filterProducts()"><span>أوف وايت (188)</span></label>
+            </div>
+        </div>
+        <!-- Size -->
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">المقاس / Size</div>
+            <div class="size-grid" id="sizeFilters">
+                <div class="size-btn" onclick="toggleSize(this,'36')">36</div>
+                <div class="size-btn" onclick="toggleSize(this,'37')">37</div>
+                <div class="size-btn" onclick="toggleSize(this,'38')">38</div>
+                <div class="size-btn" onclick="toggleSize(this,'39')">39</div>
+                <div class="size-btn" onclick="toggleSize(this,'40')">40</div>
+                <div class="size-btn" onclick="toggleSize(this,'XS')">XS</div>
+                <div class="size-btn" onclick="toggleSize(this,'S')">S</div>
+                <div class="size-btn" onclick="toggleSize(this,'M')">M</div>
+                <div class="size-btn" onclick="toggleSize(this,'L')">L</div>
+                <div class="size-btn" onclick="toggleSize(this,'XL')">XL</div>
+                <div class="size-btn" onclick="toggleSize(this,'2XL')">2XL</div>
+                <div class="size-btn" onclick="toggleSize(this,'3XL')">3XL</div>
+            </div>
+        </div>
+        <!-- Price -->
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">السعر / Price ₪</div>
+            <div class="price-inputs">
+                <input type="number" class="price-input" id="priceMin" placeholder="من" min="0">
+                <span class="price-sep">—</span>
+                <input type="number" class="price-input" id="priceMax" placeholder="إلى" min="0">
+            </div>
+            <button class="apply-price" onclick="applyPriceFilter()">تطبيق</button>
+        </div>
+        <button class="clear-filters-btn" onclick="clearAllFilters()">مسح كل الفلاتر</button>
+    </aside>
+
+    <!-- PRODUCTS -->
+    <main class="products-main">
+        <div class="products-grid" id="productsGrid"></div>
+        <div class="no-results" id="noResults" style="display:none">لا توجد منتجات تطابق الفلاتر المختارة</div>
+        <div class="load-more-wrap">
+            <button class="load-more-btn" id="loadMoreBtn" onclick="loadMore()">تحميل المزيد</button>
+        </div>
+    </main>
+
+</div>
+
+<!-- MOBILE FILTER OVERLAY -->
+<div class="filter-overlay" id="filterOverlay" onclick="toggleMobileSidebar()"></div>
+<div class="mobile-sidebar" id="mobileSidebar">
+    <div class="mobile-sidebar-header">
+        <span class="mobile-sidebar-title">فلتر المنتجات</span>
+        <div class="close-sidebar" onclick="toggleMobileSidebar()">
+            <svg viewBox="0 0 384 512"><path d="M231.6 256l130.1-130.1c4.7-4.7 4.7-12.3 0-17l-22.6-22.6c-4.7-4.7-12.3-4.7-17 0L192 216.4 61.9 86.3c-4.7-4.7-12.3-4.7-17 0l-22.6 22.6c-4.7 4.7-4.7 12.3 0 17L152.4 256 22.3 386.1c-4.7 4.7-4.7 12.3 0 17l22.6 22.6c4.7 4.7 12.3 4.7 17 0L192 295.6l130.1 130.1c4.7 4.7 12.3 4.7 17 0l22.6-22.6c4.7-4.7 4.7-12.3 0-17L231.6 256z"/></svg>
+        </div>
+    </div>
+    <!-- Same filter content for mobile -->
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">اللون</div>
+        <div class="color-grid" id="mColorFilters">
+            <label class="filter-check"><input type="checkbox" value="White" onchange="syncMobileFilter(this,'color')"><span>أبيض</span></label>
+            <label class="filter-check"><input type="checkbox" value="Black" onchange="syncMobileFilter(this,'color')"><span>أسود</span></label>
+            <label class="filter-check"><input type="checkbox" value="Blue" onchange="syncMobileFilter(this,'color')"><span>أزرق</span></label>
+            <label class="filter-check"><input type="checkbox" value="Beige" onchange="syncMobileFilter(this,'color')"><span>بيج</span></label>
+            <label class="filter-check"><input type="checkbox" value="Brown" onchange="syncMobileFilter(this,'color')"><span>بني</span></label>
+            <label class="filter-check"><input type="checkbox" value="Burgundy" onchange="syncMobileFilter(this,'color')"><span>نبيذي</span></label>
+            <label class="filter-check"><input type="checkbox" value="Denim" onchange="syncMobileFilter(this,'color')"><span>دنيم</span></label>
+            <label class="filter-check"><input type="checkbox" value="Navy" onchange="syncMobileFilter(this,'color')"><span>نيفي</span></label>
+        </div>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">المقاس</div>
+        <div class="size-grid">
+            <div class="size-btn" onclick="toggleSize(this,'S','mobile')">S</div>
+            <div class="size-btn" onclick="toggleSize(this,'M','mobile')">M</div>
+            <div class="size-btn" onclick="toggleSize(this,'L','mobile')">L</div>
+            <div class="size-btn" onclick="toggleSize(this,'XL','mobile')">XL</div>
+            <div class="size-btn" onclick="toggleSize(this,'36','mobile')">36</div>
+            <div class="size-btn" onclick="toggleSize(this,'38','mobile')">38</div>
+        </div>
+    </div>
+    <button class="apply-price" onclick="toggleMobileSidebar()" style="margin-top:16px">عرض النتائج</button>
+    <button class="clear-filters-btn" onclick="clearAllFilters()" style="margin-top:8px;display:block">مسح الكل</button>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="mobile-nav">
+    <a href="/" class="mnav-item">
+        <svg viewBox="0 0 512 512"><path d="M509.8 227.5L448 177.8v-76c0-3.3-2.7-6-6-6h-20c-3.3 0-6 2.7-6 6v50.1L276.1 39.1c-11.7-9.5-28.5-9.5-40.2 0L2.2 227.5c-2.6 2.1-3 5.9-.9 8.4l12.6 15.6c2.1 2.6 5.9 3 8.5.9L64 218.9v229c0 17.7 14.3 32 32 32h116c6.6 0 12-5.4 12-12V335.8l64 .3v132.2c0 6.6 5.4 12 12 12l116-.3c17.7 0 32-14.3 32-32V219l41.6 33.5c2.6 2.1 6.4 1.7 8.5-.9l12.6-15.6c2.1-2.6 1.6-6.4-.9-8.5z"/></svg>
+        الرئيسية
+    </a>
+    <a href="#" class="mnav-item active">
+        <svg viewBox="0 0 576 512"><path d="M552 64H129.3l-8.3-44.4C118.8 8.2 108.9 0 97.4 0H12C5.4 0 0 5.4 0 12v8c0 6.6 5.4 12 12 12h78.7L161 405c-10.6 11.3-17 26.4-17 43 0 35.3 28.7 64 64 64s64-28.7 64-64a63.7 63.7 0 0 0-8.6-32h145.2a63.7 63.7 0 0 0-8.6 32c0 35.3 28.7 64 64 64 35.3 0 64-28.7 64-64 0-18-7.4-34.2-19.4-45.9H544c11.4 0 21.2-8 23.5-19.1l43.3-208C614 78 602.7 64 552 64z"/></svg>
+        تسوق
+    </a>
+    <a href="#" class="mnav-item">
+        <svg viewBox="0 0 36 32"><path d="M25.9.2c-2.9 0-5.7 1.8-7.9 3.7-2.2-2-5-3.7-7.9-3.7C3.9.2 0 4 0 10.3c0 5 4.3 9 4.6 9.4l11.6 11.5c1 .9 2.5 1 3.5 0l11.6-11.5c1.1-1.1 4.6-4.8 4.6-9.4C36 4 32.1.2 25.9.2z"/></svg>
+        المفضلة
+    </a>
+    <a href="#" class="mnav-item">
+        <svg viewBox="0 0 32 32"><path d="M15.7 18.2c-4.9 0-8.9-4-8.9-8.9S10.8.5 15.7.5s8.9 4 8.9 8.9-4.1 8.8-8.9 8.8zM30.6 31.5h-1.3c0-7.3-6-13.3-13.3-13.3S2.7 24.2 2.7 31.5H1.4c0-8.1 6.5-14.6 14.6-14.6s14.6 6.5 14.6 14.6z"/></svg>
+        حسابي
+    </a>
+</nav>
+
+<script>
+    const BASE = '//armastus.ps/cdn/shop/files/';
+    const PRODUCTS = [
+        { id:1, name:'Dress', handle:'dress-1658', price:249.99, compare:375.00, colors:['Black','Navy'],
+            img1:'e_dress_1775520028902_01.jpg?v=1775520034', img2:'e_dress_1775520029184_02.jpg?v=1775520038',
+            swatches:[{c:'Black',img:'e_dress_1775520029184_02.jpg?v=1775520038'},{c:'Navy',img:'e_dress_1775520029815_05.jpg?v=1775520050'}] },
+        { id:2, name:'Dress', handle:'dress-1657', price:225.00, compare:335.00, colors:['Black','Navy','White'],
+            img1:'e_dress_1775578751424_01.jpg?v=1775578757', img2:'e_dress_1775578751662_02.jpg?v=1775578762',
+            swatches:[{c:'Black',img:'e_dress_1775578752788_07.jpg?v=1775578783'},{c:'Navy',img:'e_dress_1775578751424_01.jpg?v=1775578757'},{c:'White',color:'#f5f5f5'}] },
+        { id:3, name:'Dress', handle:'dress-1656', price:235.00, compare:355.00, colors:['Black','Beige'],
+            img1:'e_dress_1775578630792_01.jpg?v=1775578635', img2:'e_dress_1775578631050_02.jpg?v=1775578639',
+            swatches:[{c:'Black',img:'e_dress_1775578630792_01.jpg?v=1775578635'},{c:'Beige',img:'e_dress_1775578631669_05.jpg?v=1775578652'}] },
+        { id:4, name:'Dress', handle:'dress-1655', price:249.99, compare:375.00, colors:['Black','Navy','Beige','Burgundy'],
+            img1:'e_dress_1775578805478_01.jpg?v=1775578810', img2:'e_dress_1775578805721_02.jpg?v=1775578816',
+            swatches:[{c:'Black',img:'e_dress_1775578806116_04.jpg?v=1775578823'},{c:'Navy',img:'e_dress_1775578805721_02.jpg?v=1775578816'},{c:'Beige',img:'e_dress_1775578805478_01.jpg?v=1775578810'},{c:'Burgundy',img:'e_dress_1775578805914_03.jpg?v=1775578820'}] },
+        { id:5, name:'Two Piece Set + Belt', handle:'two-piece-set-belt-1', price:199.99, compare:305.00, colors:['Denim','Black'],
+            img1:'e_two-piece-set-belt_1775578854431_01.jpg?v=1775578860', img2:'e_two-piece-set-belt_1775578854656_02.jpg?v=1775578864',
+            swatches:[{c:'Denim',img:'e_two-piece-set-belt_1775578854656_02.jpg?v=1775578864'},{c:'Black',img:'e_two-piece-set-belt_1775578967285_07.jpg?v=1775578996'}] },
+        { id:6, name:'Jeans', handle:'jeans-273', price:105.00, compare:155.00, colors:['Brown'],
+            img1:'e_jeans_1775579450760_01.jpg?v=1775579454', img2:null,
+            swatches:[{c:'Brown',img:'e_jeans_1775579450760_01.jpg?v=1775579454'}] },
+        { id:7, name:'Jeans', handle:'jeans-272', price:99.99, compare:150.00, colors:['Denim'],
+            img1:'e_jeans_1775579421121_01.jpg?v=1775579425', img2:null,
+            swatches:[{c:'Denim',img:'e_jeans_1775579421121_01.jpg?v=1775579425'}] },
+        { id:8, name:'Jeans', handle:'jeans-271', price:109.99, compare:165.00, colors:['Denim'],
+            img1:'e_jeans_1775579482771_01.jpg?v=1775579487', img2:'e_jeans_1775579482984_02.jpg?v=1775579491',
+            swatches:[{c:'Denim',img:'e_jeans_1775579482984_02.jpg?v=1775579491'}] },
+        { id:9, name:'Jeans', handle:'jeans-270', price:99.99, compare:150.00, colors:['Denim'],
+            img1:'e_jeans_1775579579463_01.jpg?v=1775579583', img2:'e_jeans_1775579591888_01.jpg?v=1775579596',
+            swatches:[{c:'Denim',img:'e_jeans_1775579591888_01.jpg?v=1775579596'}] },
+        { id:10, name:'Jeans', handle:'jeans-269', price:99.99, compare:150.00, colors:['Denim'],
+            img1:'e_jeans_1775579635358_01.jpg?v=1775579639', img2:'e_jeans_1775579635558_02.jpg?v=1775579643',
+            swatches:[{c:'Denim',img:'e_jeans_1775579635558_02.jpg?v=1775579643'}] },
+        { id:11, name:'Jeans', handle:'jeans-268', price:99.99, compare:150.00, colors:['Off White'],
+            img1:'e_jeans_1775579685971_01.jpg?v=1775579689', img2:'e_jeans_1775579704175_01.jpg?v=1775579708',
+            swatches:[{c:'Off White',img:'e_jeans_1775579704175_01.jpg?v=1775579708'}] },
+        { id:12, name:'Jeans + Belt', handle:'jeans-belt-7', price:109.99, compare:165.00, colors:['Denim'],
+            img1:'e_jeans-belt_1775419907495_02.jpg?v=1775449272', img2:'e_jeans-belt_1775419906534_01.jpg?v=1775449272',
+            swatches:[{c:'Denim',img:'e_jeans-belt_1775419907495_02.jpg?v=1775449272'}] },
+    ];
+
+    let activeColors = new Set();
+    let activeSizes = new Set();
+    let priceRange = { min: null, max: null };
+    let visibleCount = 12;
+    let currentSort = 'newest';
+
+    function discount(p) { return Math.round((1 - p.price / p.compare) * 100); }
+
+    function getSorted(arr) {
+        const copy = [...arr];
+        if (currentSort === 'price_asc') copy.sort((a,b) => a.price - b.price);
+        else if (currentSort === 'price_desc') copy.sort((a,b) => b.price - a.price);
+        else if (currentSort === 'discount') copy.sort((a,b) => discount(b) - discount(a));
+        return copy;
+    }
+
+    function getFiltered() {
+        return PRODUCTS.filter(p => {
+            if (activeColors.size > 0 && !p.colors.some(c => activeColors.has(c))) return false;
+            if (priceRange.min !== null && p.price < priceRange.min) return false;
+            if (priceRange.max !== null && p.price > priceRange.max) return false;
+            return true;
+        });
+    }
+
+    function renderCard(p) {
+        const disc = discount(p);
+        const swHtml = p.swatches.map((s,i) => {
+            const bg = s.img ? `background-image:url('${BASE}${s.img}&width=100')` : `background:${s.color||'#ddd'}`;
+            return `<div class="swatch-circle${i===0?' active':''}" style="${bg}" title="${s.c}" onclick="changeColor(this,'${BASE}${s.img||''}',event)"></div>`;
+        }).join('');
+        return `
+  <div class="product-card" data-id="${p.id}" data-colors='${JSON.stringify(p.colors)}' data-price="${p.price}">
+    <div class="product-img">
+      <img class="primary" src="${BASE}${p.img1}&width=460" alt="${p.name}" loading="lazy">
+      ${p.img2 ? `<img class="hover" src="${BASE}${p.img2}&width=460" alt="${p.name}" loading="lazy">` : ''}
+      <span class="product-badge">-${disc}%</span>
+      <button class="wishlist-btn" onclick="toggleWish(this,event)" aria-label="wishlist">
+        <svg viewBox="0 0 36 32"><path d="M25.9.2c-2.9 0-5.7 1.8-7.9 3.7-2.2-2-5-3.7-7.9-3.7C3.9.2 0 4 0 10.3c0 5 4.3 9 4.6 9.4l11.6 11.5c1 .9 2.5 1 3.5 0l11.6-11.5c1.1-1.1 4.6-4.8 4.6-9.4C36 4 32.1.2 25.9.2z"/></svg>
+      </button>
+    </div>
+    <div class="swatches-row">${swHtml}</div>
+    <div class="product-info">
+      <div class="product-name">${p.name}</div>
+      <div class="product-pricing">
+        <span class="price-sale">${p.price.toFixed(2)} ₪</span>
+        <span class="price-old">${p.compare.toFixed(2)} ₪</span>
+      </div>
+    </div>
+  </div>`;
+    }
+
+    function renderProducts() {
+        const filtered = getSorted(getFiltered());
+        const grid = document.getElementById('productsGrid');
+        const noRes = document.getElementById('noResults');
+        const loadBtn = document.getElementById('loadMoreBtn');
+        const count = document.getElementById('productCount');
+
+        if (filtered.length === 0) {
+            grid.innerHTML = '';
+            noRes.style.display = 'block';
+            loadBtn.style.display = 'none';
+        } else {
+            noRes.style.display = 'none';
+            const visible = filtered.slice(0, visibleCount);
+            grid.innerHTML = visible.map(renderCard).join('');
+            loadBtn.style.display = filtered.length > visibleCount ? 'inline-block' : 'none';
+        }
+        count.textContent = `عرض ${Math.min(visibleCount, filtered.length)} من ${filtered.length} منتج`;
+        renderActiveTags();
+    }
+
+    function renderActiveTags() {
+        const container = document.getElementById('activeFilters');
+        let html = '';
+        activeColors.forEach(c => {
+            html += `<div class="filter-tag" onclick="removeColor('${c}')"><span>${c}</span><span class="x">×</span></div>`;
+        });
+        activeSizes.forEach(s => {
+            html += `<div class="filter-tag" onclick="removeSize('${s}')"><span>مقاس ${s}</span><span class="x">×</span></div>`;
+        });
+        if (priceRange.min !== null || priceRange.max !== null) {
+            const label = `${priceRange.min||0}₪ - ${priceRange.max||'∞'}₪`;
+            html += `<div class="filter-tag" onclick="clearPrice()"><span>${label}</span><span class="x">×</span></div>`;
+        }
+        if (html) html += `<span class="clear-all" onclick="clearAllFilters()">مسح الكل</span>`;
+        container.innerHTML = html;
+    }
+
+    function filterProducts() {
+        activeColors = new Set();
+        document.querySelectorAll('#colorFilters input:checked').forEach(el => activeColors.add(el.value));
+        visibleCount = 12;
+        renderProducts();
+    }
+
+    function toggleSize(el, size, context) {
+        el.classList.toggle('active');
+        if (el.classList.contains('active')) activeSizes.add(size);
+        else activeSizes.delete(size);
+        renderProducts();
+    }
+
+    function applyPriceFilter() {
+        const mn = document.getElementById('priceMin').value;
+        const mx = document.getElementById('priceMax').value;
+        priceRange.min = mn ? parseFloat(mn) : null;
+        priceRange.max = mx ? parseFloat(mx) : null;
+        renderProducts();
+    }
+
+    function clearPrice() {
+        priceRange = { min: null, max: null };
+        document.getElementById('priceMin').value = '';
+        document.getElementById('priceMax').value = '';
+        renderProducts();
+    }
+
+    function removeColor(c) {
+        activeColors.delete(c);
+        document.querySelectorAll('#colorFilters input').forEach(el => { if (el.value === c) el.checked = false; });
+        document.querySelectorAll('#mColorFilters input').forEach(el => { if (el.value === c) el.checked = false; });
+        renderProducts();
+    }
+
+    function removeSize(s) {
+        activeSizes.delete(s);
+        document.querySelectorAll('.size-btn').forEach(el => { if (el.textContent === s) el.classList.remove('active'); });
+        renderProducts();
+    }
+
+    function clearAllFilters() {
+        activeColors = new Set();
+        activeSizes = new Set();
+        priceRange = { min: null, max: null };
+        document.querySelectorAll('input[type=checkbox]').forEach(el => el.checked = false);
+        document.querySelectorAll('.size-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById('priceMin').value = '';
+        document.getElementById('priceMax').value = '';
+        visibleCount = 12;
+        renderProducts();
+    }
+
+    function applySort() {
+        currentSort = document.getElementById('sortSelect').value;
+        renderProducts();
+    }
+
+    function loadMore() {
+        visibleCount += 12;
+        renderProducts();
+    }
+
+    function toggleWish(btn, e) {
+        e.stopPropagation();
+        btn.classList.toggle('liked');
+    }
+
+    function changeColor(el, imgUrl, e) {
+        e.stopPropagation();
+        const card = el.closest('.product-card');
+        el.parentElement.querySelectorAll('.swatch-circle').forEach(s => s.classList.remove('active'));
+        el.classList.add('active');
+        if (imgUrl) {
+            const primary = card.querySelector('.product-img img.primary');
+            if (primary) primary.src = imgUrl + '&width=460';
+        }
+    }
+
+    function toggleMobileSidebar() {
+        document.getElementById('mobileSidebar').classList.toggle('open');
+        document.getElementById('filterOverlay').classList.toggle('open');
+        document.body.style.overflow = document.getElementById('mobileSidebar').classList.contains('open') ? 'hidden' : '';
+    }
+
+    function syncMobileFilter(el, type) {
+        if (type === 'color') {
+            if (el.checked) activeColors.add(el.value);
+            else activeColors.delete(el.value);
+            // sync desktop
+            document.querySelectorAll('#colorFilters input').forEach(d => {
+                if (d.value === el.value) d.checked = el.checked;
+            });
+            renderProducts();
+        }
+    }
+
+    renderProducts();
+</script>
+</body>
+</html>
